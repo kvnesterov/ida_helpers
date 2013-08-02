@@ -1,3 +1,6 @@
+from idaapi import *
+
+
 def EnumProc():
 	ret = []
 	for i in xrange(GetProcessQty()):
@@ -6,11 +9,13 @@ def EnumProc():
 		ret.append((pid, pinfo.name))
 	return ret
 
+
 def ShowProcList():
 	for i in xrange(GetProcessQty()):
 		pinfo = idaapi.process_info_t()
 		pid = idaapi.get_process_info(i, pinfo)
 		print("Pid: " + str(pid) + ", Name: " + pinfo.name)
+
 
 def FindNameByPid(search_pid):
 	for i in xrange(GetProcessQty()):
@@ -21,6 +26,7 @@ def FindNameByPid(search_pid):
 
 	raise AttributeError("No such pid.")
 
+
 def FindFirstPidByName(search_name):
 	for i in xrange(GetProcessQty()):
 		pinfo = idaapi.process_info_t()
@@ -30,3 +36,12 @@ def FindFirstPidByName(search_name):
 			return pid
 	
 	raise AttributeError("No such proc name.")
+
+
+def rel_from_base():
+    filename = GetInputFile().split(".")[0]
+    print(filename + "+" + hex(ScreenEA() - get_imagebase()))
+
+
+if __name__ == '__main__':        
+    add_hotkey("F11", rel_from_base)
